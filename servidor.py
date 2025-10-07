@@ -5,11 +5,11 @@ Puerto	La puerta específica de la casa
 Cliente	Invitado que llama a la puerta
 Servidor	Persona que abre la puerta y recibe al invitado"""
 
-HOST = '0.0.0.0' #escucha todas las interfaces/ ej : calle de mi casa
+DIRECCION_IP= '0.0.0.0' #escucha todas las interfaces/ ej : calle de mi casa
 #Eso quiere decir que tu servidor aceptará conexiones tanto desde localhost (127.0.0.1)
 #como desde otros dispositivos de tu red local (por ejemplo, tu celular o laptop).
 
-PORT = 5000  # un canal de comunicación específico dentro de una computadora.
+PUERTO = 5000  # un canal de comunicación específico dentro de una computadora.
 
 #creamos un nuevo socket con socket.socket(tupla  de mi direccion socket.af_inet:
 # usaremos ipv4 mi direccion, socket.sock_strem: usaremos un protocolo confiable de conexion 
@@ -23,14 +23,14 @@ servidor_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # La API hace que el TCP/IP funcione por nosotros, con métodos simples de Python.
 servidor_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1 )
 #bind le dice en que ip y puerto  ya estan listo para escuchar conexiones
-servidor_socket.bind((HOST, PORT))
+servidor_socket.bind((DIRECCION_IP, PUERTO))
 #listem() pone el servidor en modo escucha
 servidor_socket.listen()
 
 lista_de_sockets = [servidor_socket]  # lista de sockets a monitorizar
 clientes = {}  #  nombre de usuario (opcional)
 
-print(f"Servidor escuchando en {HOST}:{PORT}...")
+print(f"Servidor escuchando en {DIRECCION_IP}:{PUERTO}...")
 
 def difundir(mensaje, socket_excluido=None):
     # Para cada cliente conectado
