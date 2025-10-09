@@ -17,7 +17,7 @@ def conectar(): #conectar con el servidor
         except:
             #si hay un error o se fue a donde no se el clinte le damos unos segundos para que se intente conectar
             print("No se pudo conectar al servidor, reintentando en 3 segundos...")
-            time.sleep(3)
+            time.sleep(0.5)
 
 def recibir_mensajes(socket_cliente): #canal donde llegan los datos desde el servidor
     while True: # correra todo el tiempo 
