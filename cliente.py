@@ -4,7 +4,7 @@ import time
 
 # Datos del servidor
 DIRECCION_SERVIDOR = '127.0.0.1'  # La IP del servidor
-PUERTO = 5000                           # Puerto por donde se conecta
+PUERTO = 5000 # Puerto por donde se conecta
 
 def conectar(): #conectar con el servidor 
     while True:#bucle para que se intente una y mas veces
