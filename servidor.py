@@ -72,7 +72,7 @@ while True:
                         del clientes[socket_notificado]
                         continue
                     #revisamos si el cliente aun no tiene nombre 
-                    if clientes[nuevo_cliente] is None:
+                    if clientes[socket_notificado] is None:
                         #cambiamos a string los bytes
                         nombre = mensaje.decode('utf-8').strip()
                         clientes[socket_notificado] = nombre
