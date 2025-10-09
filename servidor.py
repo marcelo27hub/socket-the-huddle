@@ -10,7 +10,8 @@ import select #para monitorear multiples sockets
 IP_LOCAL= '127.0.0.1' #solo mi computadora
 PUERTO = 5000  # un canal de comunicación específico dentro de una computadora.
 
-#asociamos (ipv4 + tcp un protocolo confiable que me garantiza seguridad y que los mensajes me llegue en orden)
+#asociamos (ipv4 + tcp un protocolo confiable que me garantiza seguridad
+# y que los mensajes me llegue en orden)
 servidor_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #configuramos el servidor para que trabaje por si mismo y se reuse el ip y el puerto despues de cerrar el servidor
@@ -58,7 +59,7 @@ while True:
                 lista_de_sockets.append(nuevo_cliente)
                 clientes[nuevo_cliente] = None  #el nombre aun no lo sabemos
             
-            #para los que ya estan conectados
+            # Procesamos mensajes de clientes ya conectados
             else:
                 try:
                     mensaje = socket_notificado.recv(1024)
