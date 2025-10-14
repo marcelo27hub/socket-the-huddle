@@ -26,8 +26,8 @@ servidor_socket.listen()
 
 
 lista_de_sockets = [servidor_socket]  # lista de sockets a monitorizar
-clientes = {}  #  nombre de usuario (opcional)
-activo = True
+clientes = {}  #  nombre de usaurio
+activo = True #el servidor ta encendido 
 
 
 
@@ -61,8 +61,10 @@ def apagar_servidor():
     #para apagar el servidor
     """Cierra todas las conexiones y el socket principal."""
     global activo 
+    if not activo:
+        return
     activo = False
-    print("Apagando servidor, cerrando conexiones...")
+    print("\nApagando servidor, cerrando conexiones...")
     #para cerrar a todos los clientes
     for cliente_socket in list(clientes.keys()):
         try:
@@ -86,10 +88,14 @@ def comandos_servidor():
     #para apagar por comando 
     """Permite apagar manualmente el servidor desde consola."""
     while True:
-        cmd = input("Servidor (escribe 'salir' para apagar): ").strip().lower()
-        if cmd == "salir":
+        try:
+            cmd = input("Servidor (escribe 'salir' para apagar): ").strip().lower()
+            if cmd == "salir":
+                apagar_servidor()
+                break
+        except (EOFError, KeyboardInterrupt):
             apagar_servidor()
-            break
+            break    
 #hilo de ejecucion en paralelo empieza desde comando servidor, y muere todo star()  que el hilo ya esta iniciado               
 threading.Thread(target=comandos_servidor, daemon=True).start()
 try:
@@ -135,7 +141,7 @@ try:
                             nombre = socket_notificado.recv(1024).decode('utf-8').strip()
                         clientes[socket_notificado] = nombre
                         direccion = socket_notificado.getpeername()
-                        socket_notificado.send(f"\n¡Hola {nombre}! Ahora podés enviar mensajes.\nEscribe '/salir' para desconectarte.\n".encode('utf-8'))
+                        socket_notificado.send(f"¡Hola {nombre}! Ahora podés enviar mensajes.\nEscribe '/salir' para desconectarte.\n".encode('utf-8'))
                         mensaje_union = f"\n{nombre} se unió al chat."
                         difundir_en_chat(mensaje_union.encode('utf-8'), quien_envio=socket_notificado)
                         print(f"{mensaje_union} (desde {direccion[0]}:{direccion[1]})")
@@ -143,7 +149,7 @@ try:
                         #ya esta conectado al chat y ya tiene nombre
                         nombre = clientes[socket_notificado]
                         texto = mensaje.decode('utf-8').strip()
-                        if texto.lower() == "salir": #para que el cliente salga
+                        if texto.lower() == "/salir": #para que el cliente salga
                             socket_notificado.send("\nTe desconectaste del chat.\n".encode('utf-8'))
                             try:
                                 socket_notificado.shutdown(socket.SHUT_RDWR)
