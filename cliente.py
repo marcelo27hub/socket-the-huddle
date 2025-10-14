@@ -39,51 +39,56 @@ def recibir_mensajes(socket_cliente): #canal donde llegan los datos desde el ser
         socket_cliente.close()
     except:
         pass
-while True:    
-    #conectar al cliente
-    socket_cliente = conectar()
-    if not socket_cliente:
-        break
-
-    #primer input: nombre de usuario solo si no tiene
-    if not nombre_usuario:
-        mensaje_bienvenida = socket_cliente.recv(1024).decode('utf-8')
-        print(mensaje_bienvenida)  # mostrar la bienvenida separada
-        nombre_usuario = input().strip()
-        while not nombre_usuario:
-            nombre_usuario = input("Debes ingresar un nombre: ").strip()
-        socket_cliente.send(nombre_usuario.encode('utf-8'))
-    else:
-        socket_cliente.send(nombre_usuario.encode('utf-8'))
-
-    # Abrimos un hilo en segundo plano que estará recibiendo mensajes del servidor
-    # Esto permite que el cliente pueda enviar mensajes mientras escucha los que llegan
-    # daemon=True asegura que el hilo termine automáticamente si cerramos el programa principal
-    threading.Thread(target=recibir_mensajes, args=(socket_cliente,), daemon=True).start()
-    
-
-    while True:#un bucle para que esto corra
-        mensaje_a_enviar = input() #lo que escriba el cliente se guarda aca
-        # Si el usuario escribe "/salir", avisamos al servidor y cerramos la conexión
-        if mensaje_a_enviar.lower() == "/salir":
-            try:
-                socket_cliente.send(mensaje_a_enviar.encode('utf-8'))
-                socket_cliente.close()
-            except:
-                pass
-            opcion = input("¿Querés reconectarte? (s/n): ").strip().lower()
-            if opcion != "s":
-                print("👋 Cliente cerrado.")
-                exit()    
-            else:
-                print(" Intentando reconectar...\n")
-                break
-                
-        #manejo de errores
-        try:
-            #si no se quiere salir enviamos en bytes los mensajes al servidor
-            socket_cliente.send(mensaje_a_enviar.encode('utf-8'))
-        except:
-            #si hay un error  o no envio un mensaje el cliente intenta conectarse nuevamente
-            print("⚠️ Conexión perdida.")
+try:    
+    while True:    
+        #conectar al cliente
+        socket_cliente = conectar()
+        if not socket_cliente:
             break
+
+        #primer input: nombre de usuario solo si no tiene
+        if not nombre_usuario:
+            mensaje_bienvenida = socket_cliente.recv(1024).decode('utf-8')
+            print(mensaje_bienvenida)  # mostrar la bienvenida separada
+            nombre_usuario = input().strip()
+            while not nombre_usuario:
+                nombre_usuario = input("Debes ingresar un nombre: ").strip()
+            socket_cliente.send(nombre_usuario.encode('utf-8'))
+        else:
+            socket_cliente.send(nombre_usuario.encode('utf-8'))
+
+        # Abrimos un hilo en segundo plano que estará recibiendo mensajes del servidor
+        # Esto permite que el cliente pueda enviar mensajes mientras escucha los que llegan
+        # daemon=True asegura que el hilo termine automáticamente si cerramos el programa principal
+        threading.Thread(target=recibir_mensajes, args=(socket_cliente,), daemon=True).start()
+        
+
+        while True:#un bucle para que esto corra
+            mensaje_a_enviar = input() #lo que escriba el cliente se guarda aca
+            # Si el usuario escribe "/salir", avisamos al servidor y cerramos la conexión
+            if mensaje_a_enviar.lower() == "/salir":
+                try:
+                    socket_cliente.send(mensaje_a_enviar.encode('utf-8'))
+                    time.sleep(0.2)
+                    socket_cliente.close()
+                except:
+                    pass
+                opcion = input("¿Querés reconectarte? (s/n): ").strip().lower()
+                if opcion != "s":
+                    print("Cliente cerrado.")
+                    exit()    
+                else:
+                    print(" Intentando reconectar...\n")
+                    break
+                    
+            #manejo de errores
+            try:
+                #si no se quiere salir enviamos en bytes los mensajes al servidor
+                socket_cliente.send(mensaje_a_enviar.encode('utf-8'))
+            except:
+                #si hay un error  o no envio un mensaje el cliente intenta conectarse nuevamente
+                print("Conexión perdida.")
+                break
+except KeyboardInterrupt:
+    print("\nCtrl+C detectado. Cliente cerrado.")
+    
