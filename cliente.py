@@ -1,6 +1,6 @@
-import socket #enchufe virtual
+import socket #enchufe virtual 
 import threading #para que corrar mas programas (hilos)
-import time
+import time #para manejar los tiempos
 
 # Datos del servidor
 DIRECCION_SERVIDOR = '127.0.0.1'  # La IP del servidor
